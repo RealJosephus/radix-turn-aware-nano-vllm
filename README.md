@@ -14,3 +14,7 @@ This repo extends [nano-vllm](https://github.com/GeeeekExplorer/nano-vllm) by in
 Scenarios where conversation history may be updated or extended from arbitrary midpoints, especially in duplex or partially interleaved turn-based layouts.
 
 You may also need an efficient attention kernel that supports dynamic RoPE or KV layouts for query computation. This repo only provides a minimal implementation of the KVCache.
+
+An example of the complete system is shown in the diagram below. Note that this repo only implements the "Shared KV Cache" portion. The other diagrams are for reference only, illustrating a potential implementation path (not optimal) to provide a high-level overview of the entire system.
+
+<img width="8192" height="5277" alt="diagram" src="https://github.com/user-attachments/assets/2f028d58-0bf0-4393-b8bc-1914031ed27f" />
