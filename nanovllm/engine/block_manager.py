@@ -217,7 +217,7 @@ class BlockManager:
             ancestors = self._get_ancestors(parent_cache_node)
             cached_blocks_list = [b for n in reversed(ancestors) for b in n.block_table]
             blocks_for_matched_prefix = (matched_len + self.block_size - 1) // self.block_size
-            if matched_len % self.block_size != 0 and matched_len < len_total:
+            if matched_len % self.block_size != 0:
                 conflict = False
                 if blocks_for_matched_prefix == 0:
                     conflict = True
