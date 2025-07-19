@@ -3,6 +3,11 @@ import torch
 from torch import nn
 
 
+def rotate_half(x: torch.Tensor) -> torch.Tensor:
+    d = x.shape[-1] // 2
+    x1, x2 = x[..., :d], x[..., d:]
+    return torch.cat((-x2, x1), dim=-1)
+
 def apply_rotary_emb(
     x: torch.Tensor,
     cos: torch.Tensor,
@@ -10,10 +15,11 @@ def apply_rotary_emb(
 ) -> torch.Tensor:
     cos = cos.unsqueeze(-2)
     sin = sin.unsqueeze(-2)
-    x1, x2 = torch.chunk(x.to(torch.float32), 2, dim=-1)
-    y1 = x1 * cos - x2 * sin
-    y2 = x2 * cos + x1 * sin
-    return torch.cat((y1, y2), dim=-1).to(x.dtype)
+    rotary_dim = cos.shape[-1]
+    x_rot = x[..., :rotary_dim].to(torch.float32)
+    x_pass = x[..., rotary_dim:]
+    x_rotated = x_rot * cos + rotate_half(x_rot) * sin
+    return torch.cat((x_rotated, x_pass), dim=-1).to(x.dtype)
 
 
 class RotaryEmbedding(nn.Module):
